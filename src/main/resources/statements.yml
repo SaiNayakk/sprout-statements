@@ -54,6 +54,8 @@ sprout:
     service-key: ${SPROUT_SERVICE_KEY:dev-only-service-key}
     broker-name: Sprout Investments (a simulation)
     broker-registration: "INZ000SPROUT0 (not a real registration)"
+    marketdata:
+      url: ${STATEMENTS_MARKETDATA_URL:http://127.0.0.1:8103}
     oms:
       url: ${STATEMENTS_OMS_URL:http://127.0.0.1:8109}
     ledger:

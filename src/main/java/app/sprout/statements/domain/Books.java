@@ -35,6 +35,12 @@ public class Books {
         this.json = json;
     }
 
+    /** The market's current session: trade dates are sessions, so "today" for trading records is this. */
+    public LocalDate session() {
+        return LocalDate.parse(ok(send(HttpRequest.newBuilder(URI.create(props.marketdata().url() + "/v1/market")).GET()))
+                .path("sessionDate").asText());
+    }
+
     /** The customer's Sprout account, or NO_ACCOUNT. */
     public JsonNode account(UUID userId) {
         HttpResponse<String> r = send(HttpRequest.newBuilder(URI.create(props.accounts().url() + "/internal/v1/accounts/" + userId))

@@ -39,7 +39,7 @@ public class Reports {
 
     public List<Map<String, Object>> contractNotes(UUID user) {
         books.account(user);
-        LocalDate today = LocalDate.now(clock.withZone(IST));
+        LocalDate today = books.session();
         Map<LocalDate, List<JsonNode>> byDay = new TreeMap<>((a, b) -> b.compareTo(a));
         for (JsonNode e : books.executions(user, today.minusYears(1), today)) {
             byDay.computeIfAbsent(LocalDate.parse(e.path("tradeDate").asText()), d -> new ArrayList<>()).add(e);

@@ -55,6 +55,7 @@ class StatementsApiTest {
     @DynamicPropertySource
     static void props(DynamicPropertyRegistry r) {
         String base = "http://127.0.0.1:" + BOOKS.getAddress().getPort();
+        r.add("sprout.statements.marketdata.url", () -> base);
         r.add("sprout.statements.oms.url", () -> base);
         r.add("sprout.statements.ledger.url", () -> base);
         r.add("sprout.statements.accounts.url", () -> base);
@@ -217,6 +218,8 @@ class StatementsApiTest {
                                 Map.of("entryId", UUID.randomUUID().toString(), "postedAt", "2026-10-06T05:00:00Z", "description", "Sales settled",
                                         "side", "CREDIT", "amount", "4393.90", "balanceAfter", "44387.96"))));
             });
+            // the market runs ahead of the wall clock here, as pre-prod's accelerated one does
+            s.createContext("/v1/market", ex -> reply(ex, 200, Map.of("state", "OPEN", "sessionDate", "2026-10-09")));
             s.createContext("/participant/v1/accounts/", ex -> reply(ex, 200, Map.of("boId", "1208160000000042",
                     "holdings", List.of(Map.of("symbol", "HARBOR", "quantity", 6)))));
             s.start();
