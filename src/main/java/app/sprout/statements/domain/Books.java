@@ -29,8 +29,10 @@ public class Books {
     private final StatementsProperties props;
     private final ObjectMapper json;
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(1)).build();
+    private final Onward onward;
 
-    public Books(StatementsProperties props, ObjectMapper json) {
+    public Books(StatementsProperties props, ObjectMapper json, Onward onward) {
+        this.onward = onward;
         this.props = props;
         this.json = json;
     }
@@ -80,6 +82,7 @@ public class Books {
     }
 
     private HttpResponse<String> send(HttpRequest.Builder req) {
+        onward.headers(req);
         try {
             return http.sendAsync(req.timeout(DEADLINE).build(), HttpResponse.BodyHandlers.ofString()).get(DEADLINE.toMillis(), TimeUnit.MILLISECONDS);
         } catch (Exception e) {
